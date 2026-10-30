@@ -1,0 +1,55 @@
+---
+import siteConfig from '../../site.config';
+import { formatDay } from '../lib/github';
+
+interface Props {
+  syncedAt: Date;
+}
+
+const { syncedAt } = Astro.props;
+---
+
+<footer id="contact" class="site-footer">
+  <div class="container inner">
+    <p class="prompt">
+      <span class="prompt-sigil">$</span> git log -1 → synced <time datetime={syncedAt.toISOString()}>{formatDay(syncedAt)}</time>
+    </p>
+    <ul role="list">
+      <li><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></li>
+      <li><a href={siteConfig.linkedin}>linkedin</a></li>
+      <li><a href={`https://github.com/${siteConfig.githubUsername}`}>github</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-block: 48px 64px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+</style>

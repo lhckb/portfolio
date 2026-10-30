@@ -1,44 +1,49 @@
 ---
 import Base from '../layouts/Base.astro';
-import siteConfig from '../../site.config';
+import FilterBar from '../components/FilterBar.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import ProjectSection from '../components/ProjectSection.astro';
+import { getProjects } from '../lib/github';
+
+const { software, data } = await getProjects();
+const syncedAt = new Date();
+
+const firstSection = software.length > 0 ? 'software' : data.length > 0 ? 'data' : undefined;
+// The filter only helps when both kinds of data project are listed.
+const showFilter = data.some((p) => p.sub === 'ds') && data.some((p) => p.sub === 'de');
 ---
 
 <Base>
-  <main class="container scaffold">
-    <p class="prompt"><span class="prompt-sigil">$</span> whoami</p>
-    <h1>{siteConfig.name}</h1>
-    <p class="role">{siteConfig.role} — software · data science · data engineering</p>
-    <p class="intro">{siteConfig.intro}</p>
+  {firstSection && <a class="skip-link" href={`#${firstSection}`}>Skip to projects</a>}
+  <Header showSoftware={software.length > 0} showData={data.length > 0} />
+  <main>
+    <Hero syncedAt={syncedAt} />
+    {
+      software.length > 0 && (
+        <ProjectSection
+          id="software"
+          title="Software Engineering"
+          subtitle="Applications, services and tools"
+          command="ls ~/projects/software --sort=updated"
+          projects={software}
+        />
+      )
+    }
+    {
+      data.length > 0 && (
+        <ProjectSection
+          id="data"
+          title="Data"
+          subtitle="Data science and data engineering"
+          command="ls ~/projects/data --sort=updated"
+          projects={data}
+        >
+          {showFilter && <FilterBar slot="actions" />}
+        </ProjectSection>
+      )
+    }
   </main>
+  <Footer syncedAt={syncedAt} />
 </Base>
-
-<style>
-  /* Placeholder page for the scaffold step; replaced by the real sections in step 4. */
-  .scaffold {
-    padding-block: 88px var(--section-pad);
-  }
-
-  h1 {
-    margin: 16px 0 0;
-    font-family: var(--font-mono);
-    font-size: clamp(36px, 5.5vw, 60px);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-  }
-
-  .role {
-    margin: 14px 0 0;
-    font-family: var(--font-mono);
-    font-size: 17px;
-    color: var(--text-3);
-  }
-
-  .intro {
-    margin: 24px 0 0;
-    max-width: 640px;
-    font-size: 18px;
-    line-height: 1.65;
-    color: var(--text-2);
-  }
-</style>

@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import siteConfig from '../../site.config';
+import { getProjects } from '../lib/github';
+import { withBase } from '../lib/url';
+
+const { software, data } = await getProjects();
+const syncedAt = new Date();
+---
+
+<Base title={`Page not found — ${siteConfig.name}`} noindex>
+  <Header showSoftware={software.length > 0} showData={data.length > 0} />
+  <main class="container not-found">
+    <p class="prompt"><span class="prompt-sigil">$</span> cd ~/that-page</p>
+    <p class="output">cd: ~/that-page: no such file or directory</p>
+    <h1>Page not found<span class="cursor" aria-hidden="true"></span></h1>
+    <p class="hint">The page you were looking for doesn’t exist or has moved.</p>
+    <a class="home" href={withBase()}><span class="prompt-sigil">$</span> cd ~/{siteConfig.handle}</a>
+  </main>
+  <Footer syncedAt={syncedAt} />
+</Base>
+
+<style>
+  .not-found {
+    padding-block: 88px var(--section-pad);
+  }
+
+  .prompt {
+    font-size: 15px;
+  }
+
+  .output {
+    margin: 8px 0 0;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--text-3);
+  }
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 32px 0 0;
+    font-family: var(--font-mono);
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .hint {
+    margin: 16px 0 0;
+    max-width: 640px;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--text-2);
+  }
+
+  .home {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-top: 32px;
+    padding: 0 16px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text);
+    text-decoration: none;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+  }
+
+  .home:hover {
+    background: var(--surface-hover);
+  }
+</style>

@@ -17,12 +17,24 @@ import { withBase } from '../lib/url';
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 
 const {
-  title = `${siteConfig.name} — portfolio`,
-  description = `${siteConfig.role}. Software engineering and data projects by ${siteConfig.name}.`,
+  title = `${siteConfig.name} — ${siteConfig.role}`,
+  description = siteConfig.description,
+  noindex = false,
 } = Astro.props;
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(withBase('og.png'), Astro.site);
+
+// Analytics only in the deployed build (or when forced), never in dev or a local preview.
+const goatcounterCode: string = siteConfig.goatcounterCode;
+const analytics =
+  import.meta.env.PROD &&
+  goatcounterCode !== '' &&
+  (process.env.GITHUB_ACTIONS === 'true' || process.env.FORCE_ANALYTICS === 'true');
 ---
 
 <!doctype html>
@@ -30,12 +42,47 @@ const {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // Runs before first paint: apply a saved theme choice so there is no flash.
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        try {
+          var theme = localStorage.getItem('theme');
+          if (theme === 'light' || theme === 'dark') root.dataset.theme = theme;
+        } catch (e) {}
+      })();
+    </script>
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={pageUrl} />}
+    <meta name="theme-color" content="#F7F9FB" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0B0F14" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
     <link rel="preload" href={monoMedium} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={sansRegular} as="font" type="font/woff2" crossorigin />
-    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${siteConfig.name} — ${siteConfig.role}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {
+      analytics && (
+        <script
+          is:inline
+          async
+          data-goatcounter={`https://${goatcounterCode}.goatcounter.com/count`}
+          src="https://gc.zgo.at/count.js"
+        />
+      )
+    }
   </head>
   <body>
     <slot />

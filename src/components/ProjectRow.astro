@@ -1,0 +1,131 @@
+---
+import { formatMonth } from '../lib/github';
+import type { Project } from '../lib/types';
+import ArrowUpRight from './ArrowUpRight.astro';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<li class="row" data-sub={project.sub}>
+  <div class="name-cell">
+    {project.tag && <span class="tag">{project.tag}</span>}
+    <a class="name" href={project.url}>{project.name}</a>
+    {
+      project.homepage && (
+        <a class="demo" href={project.homepage}>
+          demo<span class="visually-hidden"> of {project.name}</span>
+          <ArrowUpRight />
+        </a>
+      )
+    }
+  </div>
+  <p class:list={['desc', { empty: !project.description }]}>{project.description ?? 'No description yet.'}</p>
+  <div class="meta">
+    <span class="lang"><span class="visually-hidden">Language: </span>{project.language ?? '—'}</span>
+    <span class="updated">
+      <span class="visually-hidden">Updated </span><time datetime={project.pushedAt.toISOString()}>{formatMonth(project.pushedAt)}</time>
+    </span>
+  </div>
+</li>
+
+<style>
+  .row {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 24px;
+    padding: 18px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .row:hover {
+    background: var(--surface-hover);
+  }
+
+  /* Inline flow, so long names wrap beside the tag rather than under it. */
+  .name-cell {
+    flex: 1 1 240px;
+    min-width: 0;
+  }
+
+  .tag {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 2px 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text-3);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-badge);
+  }
+
+  .name {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--section-accent, var(--accent));
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  /* Stretched link: the whole row is clickable without nesting links. */
+  .name::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .row:hover .name {
+    text-decoration: underline;
+  }
+
+  /* Sits above the stretched link. */
+  .demo {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 10px;
+    padding-block: 6px;
+    margin-block: -6px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+  }
+
+  .desc {
+    flex: 2 1 320px;
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-2);
+  }
+
+  .desc.empty {
+    color: var(--muted);
+  }
+
+  .meta {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 20px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .lang {
+    width: 96px;
+  }
+
+  .updated {
+    width: 80px;
+  }
+</style>

@@ -160,8 +160,14 @@ export function getProjects(): Promise<Projects> {
 }
 
 const monthYear = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const dayMonthYear = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 /** Formats a date like `Oct 2026`. */
 export function formatMonth(date: Date): string {
   return monthYear.format(date);
+}
+
+/** Formats a date like `Oct 30, 2026`. */
+export function formatDay(date: Date): string {
+  return dayMonthYear.format(date);
 }

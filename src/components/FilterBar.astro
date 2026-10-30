@@ -1,0 +1,67 @@
+---
+// Progressive enhancement: ships hidden; the script reveals it. Without JS every row shows.
+---
+
+<div class="filter-bar" role="group" aria-label="Filter data projects" data-filter-bar hidden>
+  <button type="button" data-filter="all" aria-pressed="true">--all</button>
+  <button type="button" data-filter="ds" aria-pressed="false">--data-science</button>
+  <button type="button" data-filter="de" aria-pressed="false">--data-engineering</button>
+</div>
+<p class="visually-hidden" role="status" data-filter-status></p>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-filter-bar]');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+
+  if (bar && status) {
+    const buttons = Array.from(bar.querySelectorAll<HTMLButtonElement>('button[data-filter]'));
+    const rows = Array.from(document.querySelectorAll<HTMLElement>('#data li[data-sub]'));
+    const labels: Record<string, string> = { all: 'data', ds: 'data science', de: 'data engineering' };
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.filter ?? 'all';
+        let shown = 0;
+        for (const row of rows) {
+          row.hidden = filter !== 'all' && row.dataset.sub !== filter;
+          if (!row.hidden) shown++;
+        }
+        for (const other of buttons) other.setAttribute('aria-pressed', String(other === button));
+        status.textContent = `Showing ${shown} ${labels[filter]} ${shown === 1 ? 'project' : 'projects'}`;
+      });
+    }
+    bar.hidden = false;
+  }
+</script>
+
+<style>
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  button {
+    min-height: 44px;
+    padding: 12px 14px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--text-2);
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-button);
+    cursor: pointer;
+  }
+
+  button:hover {
+    color: var(--text);
+    background: var(--surface-hover);
+  }
+
+  button[aria-pressed='true'] {
+    color: var(--on-accent);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+</style>

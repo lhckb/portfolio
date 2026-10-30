@@ -1,0 +1,106 @@
+---
+import siteConfig from '../../site.config';
+import { formatDay } from '../lib/github';
+
+interface Props {
+  syncedAt: Date;
+}
+
+const { syncedAt } = Astro.props;
+const github = `github.com/${siteConfig.githubUsername}`;
+---
+
+<section class="container hero">
+  <p class="prompt"><span class="prompt-sigil">$</span> whoami</p>
+  <h1>{siteConfig.name}<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="role">{siteConfig.role} — {siteConfig.disciplines}</p>
+  <p class="intro">{siteConfig.intro}</p>
+  <dl class="info">
+    <dt>location</dt>
+    <dd>{siteConfig.location}</dd>
+    <dt>focus</dt>
+    <dd>{siteConfig.focus}</dd>
+    <dt>contact</dt>
+    <dd><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></dd>
+    <dt>synced</dt>
+    <dd>
+      <time datetime={syncedAt.toISOString()}>{formatDay(syncedAt)}</time> from <a href={`https://${github}`}>{github}</a>
+    </dd>
+  </dl>
+</section>
+
+<style>
+  .hero {
+    padding-block: 88px var(--section-pad);
+  }
+
+  .prompt {
+    font-size: 15px;
+  }
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0 0;
+    font-family: var(--font-mono);
+    font-size: clamp(36px, 5.5vw, 60px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .role {
+    margin: 14px 0 0;
+    font-family: var(--font-mono);
+    font-size: 17px;
+    color: var(--text-3);
+  }
+
+  .intro {
+    margin: 24px 0 0;
+    max-width: 640px;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--text-2);
+  }
+
+  .info {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 12px 32px;
+    margin: 40px 0 0;
+    padding: 24px 28px;
+    max-width: 640px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-panel);
+  }
+
+  dt {
+    color: var(--muted);
+  }
+
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* Taller hit area without changing the line layout. */
+  dd a {
+    padding-block: 6px;
+  }
+
+  @media (max-width: 639px) {
+    .hero {
+      padding-top: 56px;
+    }
+
+    .info {
+      gap: 10px 20px;
+      padding: 20px;
+    }
+  }
+</style>

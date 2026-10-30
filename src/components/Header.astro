@@ -1,0 +1,105 @@
+---
+import siteConfig from '../../site.config';
+import { withBase } from '../lib/url';
+import ArrowUpRight from './ArrowUpRight.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  showSoftware: boolean;
+  showData: boolean;
+}
+
+const { showSoftware, showData } = Astro.props;
+---
+
+<header class="site-header">
+  <div class="container inner">
+    <a class="home" href={withBase()}><span class="tilde">~/</span>{siteConfig.handle}</a>
+    <nav aria-label="Primary">
+      <ul role="list">
+        {showSoftware && <li><a href={withBase('#software')}>./software</a></li>}
+        {showData && <li><a href={withBase('#data')}>./data</a></li>}
+        <li><a href={withBase('#contact')}>./contact</a></li>
+        <li>
+          <a class="github" href={`https://github.com/${siteConfig.githubUsername}`}>github<ArrowUpRight /></a>
+        </li>
+        <li><ThemeToggle /></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px 12px;
+    padding-block: 14px;
+    font-family: var(--font-mono);
+  }
+
+  .home {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .home:hover {
+    text-decoration: underline;
+  }
+
+  .tilde {
+    color: var(--accent);
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+  }
+
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    color: var(--text-3);
+    text-decoration: none;
+  }
+
+  nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+  }
+
+  nav .github {
+    gap: 6px;
+    margin-left: 8px;
+    padding: 0 14px;
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+  }
+
+  @media (max-width: 639px) {
+    /* The nav wraps under the name; line its first link up with the name. */
+    ul {
+      margin-left: -12px;
+    }
+  }
+</style>
