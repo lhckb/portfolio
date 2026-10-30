@@ -1,12 +1,12 @@
 // npm run repos: lists every public repo you own and the portfolio section it is in.
-import { applyTag, classifyRepo, fetchRepos, resolveToken } from '../src/lib/github';
+import { classifyRepo, fetchRepos, resolveToken } from '../src/lib/github';
 
 const repos = (await fetchRepos({ token: resolveToken() })).filter((repo) => !repo.private);
 
 const rows = repos.map((repo) => {
   const placement = classifyRepo(repo);
   const section = !placement ? '-' : placement.sub ? `data/${placement.sub}` : 'software';
-  const tag = placement ? (applyTag(placement, repo.name).tag ?? '') : '';
+  const tag = placement?.tag ?? '';
   const notes = [repo.fork && 'fork', repo.archived && 'archived'].filter(Boolean).join(',');
   const description = repo.description ?? '';
   return {

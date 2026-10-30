@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { applyTag, buildProjects, classifyRepo, fetchRepos, formatMonth, parseNextLink, toProject } from './github';
+import { buildProjects, classifyRepo, fetchRepos, formatMonth, parseNextLink, toProject } from './github';
 import type { GitHubRepo } from './types';
 import fixture from './fixtures/repos.json';
 
@@ -83,39 +83,11 @@ describe('toProject', () => {
   });
 });
 
-describe('applyTag', () => {
-  it('replaces the default tag with the configured one, keeping the section', () => {
-    expect(applyTag({ section: 'data', sub: 'de', tag: 'de' }, 'etl', { etl: 'etl' })).toEqual({
-      section: 'data',
-      sub: 'de',
-      tag: 'etl',
-    });
-    expect(applyTag({ section: 'software' }, 'cli', { cli: 'cli' })).toEqual({ section: 'software', tag: 'cli' });
-  });
-
-  it('keeps the default without an entry, and removes the tag for an empty one', () => {
-    expect(applyTag({ section: 'software', tag: 'astro' }, 'web-app', {})).toEqual({ section: 'software', tag: 'astro' });
-    expect(applyTag({ section: 'software', tag: 'astro' }, 'web-app', { 'web-app': '' })).toEqual({ section: 'software' });
-  });
-});
-
 describe('buildProjects', () => {
   it('splits into sections, newest push first', () => {
-    const { software, data } = buildProjects(repos, { topics, tags: {}, warn: () => {} });
+    const { software, data } = buildProjects(repos, topics, () => {});
     expect(software.map((p) => p.name)).toEqual(['cli-tool', 'web-app', 'forked-lib', 'old-archived']);
     expect(data.map((p) => p.name)).toEqual(['etl-pipeline', 'double-tagged', 'ml-notebook', 'no-description']);
-  });
-
-  it('applies configured tags and warns about tags for repos not on the portfolio', () => {
-    const warn = vi.fn();
-    const tags = { 'cli-tool': 'cli', 'etl-pipeline': 'etl', 'web-app': '', untagged: 'x' };
-    const { software, data } = buildProjects(repos, { topics, tags, warn });
-    const find = (name: string) => [...software, ...data].find((p) => p.name === name)!;
-    expect(find('cli-tool').tag).toBe('cli');
-    expect(find('etl-pipeline')).toMatchObject({ tag: 'etl', sub: 'de' });
-    expect(find('web-app')).not.toHaveProperty('tag');
-    expect(find('ml-notebook').tag).toBe('ds');
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining('untagged'));
   });
 });
 
