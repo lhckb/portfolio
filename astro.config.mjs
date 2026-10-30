@@ -7,4 +7,6 @@ export default defineConfig({
   site: `https://${siteConfig.githubUsername}.github.io`,
   base: '/portfolio',
   output: 'static',
+  // One small page: inline the CSS so nothing blocks the first render.
+  build: { inlineStylesheets: 'always' },
 });
