@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import siteConfig from '../../site.config';
+---
+
+<Base>
+  <main class="container scaffold">
+    <p class="prompt"><span class="prompt-sigil">$</span> whoami</p>
+    <h1>{siteConfig.name}</h1>
+    <p class="role">{siteConfig.role} — software · data science · data engineering</p>
+    <p class="intro">{siteConfig.intro}</p>
+  </main>
+</Base>
+
+<style>
+  /* Placeholder page for the scaffold step; replaced by the real sections in step 4. */
+  .scaffold {
+    padding-block: 88px var(--section-pad);
+  }
+
+  h1 {
+    margin: 16px 0 0;
+    font-family: var(--font-mono);
+    font-size: clamp(36px, 5.5vw, 60px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .role {
+    margin: 14px 0 0;
+    font-family: var(--font-mono);
+    font-size: 17px;
+    color: var(--text-3);
+  }
+
+  .intro {
+    margin: 24px 0 0;
+    max-width: 640px;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--text-2);
+  }
+</style>

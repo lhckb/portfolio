@@ -1,0 +1,20 @@
+// All personal content lives here; everything else reads from this file.
+export default {
+  githubUsername: 'lhckb',
+  name: 'Luís Cruz',
+  handle: 'luiscruz', // shown as ~/<handle> in the header
+  role: 'Software engineer',
+  disciplines: 'software engineering · data science', // shown after the role
+  intro:
+    'Software engineer with 5 years of experience solving businesses’ needs with code. Experienced in web, mobile and native software projects, and in machine learning and data engineering.',
+  location: 'Recife, Brazil',
+  focus: 'Building tech solutions so businesses can focus on business.',
+  email: 'luis.carv.cruz@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/lcruz03',
+  topics: {
+    software: 'portfolio-software',
+    dataScience: 'portfolio-data-science',
+    dataEngineering: 'portfolio-data-engineering',
+  },
+  goatcounterCode: '', // empty = no analytics
+} as const;
