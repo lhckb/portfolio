@@ -7,6 +7,7 @@
   const root = document.documentElement;
   const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
   const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const chrome = { light: '#F7F9FB', dark: '#0B0F14' };
 
   type Theme = 'light' | 'dark';
@@ -26,15 +27,24 @@
     }
   }
 
-  button?.addEventListener('click', () => {
-    const next: Theme = current() === 'dark' ? 'light' : 'dark';
-    root.dataset.theme = next;
+  function apply(theme: Theme) {
+    root.dataset.theme = theme;
     try {
-      localStorage.setItem('theme', next);
+      localStorage.setItem('theme', theme);
     } catch {
       // Storage blocked: the choice lasts until the page is closed.
     }
     sync();
+  }
+
+  button?.addEventListener('click', () => {
+    const next: Theme = current() === 'dark' ? 'light' : 'dark';
+    // Crossfade between themes where supported; otherwise, or with reduced motion, switch instantly.
+    if ('startViewTransition' in document && !reducedMotion.matches) {
+      document.startViewTransition(() => apply(next));
+    } else {
+      apply(next);
+    }
   });
   systemDark.addEventListener('change', sync);
   sync();
@@ -63,6 +73,13 @@
   /* Without JavaScript the toggle can't work, so keep its space but hide it. */
   :global(:root:not(.js)) .theme-toggle {
     visibility: hidden;
+  }
+
+  /* Theme switch crossfade (see the click handler). */
+  :global(::view-transition-old(root)),
+  :global(::view-transition-new(root)) {
+    animation-duration: 300ms;
+    animation-timing-function: ease;
   }
 
   /* The icon shows the theme a click switches to. */
