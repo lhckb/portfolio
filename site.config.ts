@@ -17,5 +17,5 @@ export default {
     dataScience: 'portfolio-data-science',
     dataEngineering: 'portfolio-data-engineering',
   },
-  goatcounterCode: '', // empty = no analytics
+  goatcounterCode: 'lhckb', // empty = no analytics
 } as const;
