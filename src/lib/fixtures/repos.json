@@ -1,0 +1,122 @@
+[
+  {
+    "name": "web-app",
+    "description": "A web application.",
+    "html_url": "https://github.com/octo/web-app",
+    "homepage": "https://octo.example/web-app",
+    "language": "TypeScript",
+    "topics": ["astro", "portfolio-software", "web"],
+    "pushed_at": "2026-09-01T10:00:00Z",
+    "private": false,
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "cli-tool",
+    "description": "A command-line tool.",
+    "html_url": "https://github.com/octo/cli-tool",
+    "homepage": "",
+    "language": "Go",
+    "topics": ["portfolio-software"],
+    "pushed_at": "2026-10-15T10:00:00Z",
+    "private": false,
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "ml-notebook",
+    "description": "A machine learning notebook.",
+    "html_url": "https://github.com/octo/ml-notebook",
+    "homepage": null,
+    "language": "Jupyter Notebook",
+    "topics": ["data-science", "portfolio-data-science"],
+    "pushed_at": "2026-05-20T10:00:00Z",
+    "private": false,
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "etl-pipeline",
+    "description": "An ETL pipeline.",
+    "html_url": "https://github.com/octo/etl-pipeline",
+    "homepage": null,
+    "language": "Python",
+    "topics": ["portfolio-data-engineering"],
+    "pushed_at": "2026-07-04T10:00:00Z",
+    "private": false,
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "untagged",
+    "description": "Has general topics only.",
+    "html_url": "https://github.com/octo/untagged",
+    "homepage": null,
+    "language": "Python",
+    "topics": ["data-science", "python"],
+    "pushed_at": "2026-10-20T10:00:00Z",
+    "private": false,
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "double-tagged",
+    "description": "Tagged for both sections.",
+    "html_url": "https://github.com/octo/double-tagged",
+    "homepage": null,
+    "language": "Python",
+    "topics": ["portfolio-data-engineering", "portfolio-data-science"],
+    "pushed_at": "2026-06-10T10:00:00Z",
+    "private": false,
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "forked-lib",
+    "description": "A fork that is tagged.",
+    "html_url": "https://github.com/octo/forked-lib",
+    "homepage": null,
+    "language": "Rust",
+    "topics": ["portfolio-software", "library"],
+    "pushed_at": "2026-03-01T10:00:00Z",
+    "private": false,
+    "fork": true,
+    "archived": false
+  },
+  {
+    "name": "old-archived",
+    "description": "An archived, tagged repo.",
+    "html_url": "https://github.com/octo/old-archived",
+    "homepage": null,
+    "language": "C",
+    "topics": ["portfolio-software"],
+    "pushed_at": "2023-01-01T10:00:00Z",
+    "private": false,
+    "fork": false,
+    "archived": true
+  },
+  {
+    "name": "no-description",
+    "description": null,
+    "html_url": "https://github.com/octo/no-description",
+    "homepage": null,
+    "language": null,
+    "topics": ["portfolio-data-engineering"],
+    "pushed_at": "2026-02-02T10:00:00Z",
+    "private": false,
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "secret",
+    "description": "A private repo that is tagged.",
+    "html_url": "https://github.com/octo/secret",
+    "homepage": null,
+    "language": "TypeScript",
+    "topics": ["portfolio-software"],
+    "pushed_at": "2026-10-29T10:00:00Z",
+    "private": true,
+    "fork": false,
+    "archived": false
+  }
+]
