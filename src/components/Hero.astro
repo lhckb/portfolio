@@ -8,6 +8,7 @@ interface Props {
 
 const { syncedAt } = Astro.props;
 const github = `github.com/${siteConfig.githubUsername}`;
+const linkedin = siteConfig.linkedin.replace(/^https?:\/\/(www\.)?/, '');
 ---
 
 <section class="container hero">
@@ -21,7 +22,9 @@ const github = `github.com/${siteConfig.githubUsername}`;
     <dt>focus</dt>
     <dd>{siteConfig.focus}</dd>
     <dt>contact</dt>
-    <dd><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></dd>
+    <dd class="contact">
+      <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a><span class="sep" aria-hidden="true"> · </span><a href={siteConfig.linkedin}>{linkedin}</a>
+    </dd>
     <dt>synced</dt>
     <dd>
       <time datetime={syncedAt.toISOString()}>{formatDay(syncedAt)}</time> from <a href={`https://${github}`}>{github}</a>
@@ -88,6 +91,10 @@ const github = `github.com/${siteConfig.githubUsername}`;
     overflow-wrap: anywhere;
   }
 
+  .sep {
+    color: var(--muted);
+  }
+
   /* Taller hit area without changing the line layout. */
   dd a {
     padding-block: 6px;
@@ -101,6 +108,21 @@ const github = `github.com/${siteConfig.githubUsername}`;
     .info {
       gap: 10px 20px;
       padding: 20px;
+    }
+
+    /* Stack the contact links rather than wrapping mid-row. */
+    .contact {
+      display: grid;
+      justify-items: start;
+      gap: 6px;
+    }
+
+    .contact .sep {
+      display: none;
+    }
+
+    .contact a {
+      padding-block: 0;
     }
   }
 </style>

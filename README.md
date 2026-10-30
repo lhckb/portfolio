@@ -19,6 +19,8 @@ gh workflow run deploy.yml   # or wait for the daily build at 06:00 UTC
 
 The repo's About description, language, homepage (shown as a `demo` link) and last push date are shown. Rows are sorted newest push first.
 
+To choose a row's tag yourself, add the repo to `tags` in [`site.config.ts`](site.config.ts) (`''` hides the tag). `npm run repos` shows the tag each repo gets.
+
 ## Commands
 
 | Command | What it does |

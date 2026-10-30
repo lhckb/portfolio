@@ -1,16 +1,18 @@
 // npm run repos: lists every public repo you own and the portfolio section it is in.
-import { classifyRepo, fetchRepos, resolveToken } from '../src/lib/github';
+import { applyTag, classifyRepo, fetchRepos, resolveToken } from '../src/lib/github';
 
 const repos = (await fetchRepos({ token: resolveToken() })).filter((repo) => !repo.private);
 
 const rows = repos.map((repo) => {
   const placement = classifyRepo(repo);
   const section = !placement ? '-' : placement.sub ? `data/${placement.sub}` : 'software';
+  const tag = placement ? (applyTag(placement, repo.name).tag ?? '') : '';
   const notes = [repo.fork && 'fork', repo.archived && 'archived'].filter(Boolean).join(',');
   const description = repo.description ?? '';
   return {
     repo: repo.name,
     section,
+    tag,
     lang: repo.language ?? '',
     pushed: repo.pushed_at.slice(0, 10),
     notes,
@@ -18,7 +20,7 @@ const rows = repos.map((repo) => {
   };
 });
 
-const columns = ['repo', 'section', 'lang', 'pushed', 'notes', 'description'] as const;
+const columns = ['repo', 'section', 'tag', 'lang', 'pushed', 'notes', 'description'] as const;
 const widths = columns.map((col) => Math.max(col.length, ...rows.map((row) => row[col].length)));
 const line = (cells: string[]) => cells.map((cell, i) => cell.padEnd(widths[i]!)).join('  ').trimEnd();
 

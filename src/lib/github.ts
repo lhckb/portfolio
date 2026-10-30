@@ -4,6 +4,7 @@ import siteConfig from '../../site.config';
 import type { DataSub, GitHubRepo, Project, Section } from './types';
 
 export type Topics = { software: string; dataScience: string; dataEngineering: string };
+export type Tags = Readonly<Partial<Record<string, string>>>;
 export type Warn = (message: string) => void;
 
 export interface Placement {
@@ -108,6 +109,14 @@ export function classifyRepo(
   }
 }
 
+/** Applies the tag set for this repo in the config, if any, over the default one; '' removes it. */
+export function applyTag(placement: Placement, repoName: string, tags: Tags = siteConfig.tags): Placement {
+  const tag = tags[repoName];
+  if (tag === undefined) return placement;
+  const { tag: _default, ...rest } = placement;
+  return tag ? { ...rest, tag } : rest;
+}
+
 export function toProject(repo: GitHubRepo, placement: Placement, warn: Warn = defaultWarn): Project {
   const description = repo.description?.trim() || null;
   if (!description) warn(`${repo.name} has no description.`);
@@ -124,13 +133,26 @@ export function toProject(repo: GitHubRepo, placement: Placement, warn: Warn = d
   };
 }
 
+interface BuildOptions {
+  topics?: Topics;
+  tags?: Tags;
+  warn?: Warn;
+}
+
 /** Classifies repos into the two sections, each sorted newest push first. */
-export function buildProjects(repos: GitHubRepo[], topics: Topics = siteConfig.topics, warn: Warn = defaultWarn): Projects {
+export function buildProjects(
+  repos: GitHubRepo[],
+  { topics = siteConfig.topics, tags = siteConfig.tags, warn = defaultWarn }: BuildOptions = {},
+): Projects {
   const projects: Projects = { software: [], data: [] };
+  const unusedTags = new Set(Object.keys(tags));
   for (const repo of repos) {
     const placement = classifyRepo(repo, topics, warn);
-    if (placement) projects[placement.section].push(toProject(repo, placement, warn));
+    if (!placement) continue;
+    unusedTags.delete(repo.name);
+    projects[placement.section].push(toProject(repo, applyTag(placement, repo.name, tags), warn));
   }
+  for (const name of unusedTags) warn(`A tag is set for ${name}, which isn't on the portfolio.`);
   const newestFirst = (a: Project, b: Project) =>
     b.pushedAt.getTime() - a.pushedAt.getTime() || a.name.localeCompare(b.name);
   projects.software.sort(newestFirst);
